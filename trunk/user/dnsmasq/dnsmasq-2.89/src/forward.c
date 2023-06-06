@@ -306,6 +306,11 @@ static int forward_query(int udpfd, union mysockaddr *udpaddr,
       /* Configured answer. */
       if (flags || ede == EDE_NOT_READY)
 	goto reply;
+
+#ifdef HAVE_REGEX
+	if ((flags = is_local_regex_answer(NULL, &first, &last)))
+		goto reply;
+#endif
       
       master = daemon->serverarray[first];
       
@@ -359,6 +364,9 @@ static int forward_query(int udpfd, union mysockaddr *udpaddr,
 	      forward->forwardall = 1;
 	    }
 	  else
+#ifdef HAVE_REGEX
+		if(!master->regex)
+#endif
 	    start = master->last_server;
 	}
     }
@@ -401,7 +409,14 @@ static int forward_query(int udpfd, union mysockaddr *udpaddr,
 	    forward->sentto->failed_queries++;
 	  else
 	    forward->sentto->retrys++;
-	  
+
+#ifdef HAVE_REGEX
+	  if(forward->sentto->regex){
+	    start = first = forward->sentto->arrayposn;
+	    last = first + 1;
+	    forward->forwardall = 0;
+	  }else
+#endif
 	  if (!filter_servers(forward->sentto->arrayposn, F_SERVER, &first, &last))
 	    goto reply;
 	  
@@ -493,8 +508,13 @@ static int forward_query(int udpfd, union mysockaddr *udpaddr,
   while (1)
     { 
       int fd;
-      struct server *srv = daemon->serverarray[start];
-      
+
+	struct server *srv = daemon->serverarray[start];
+#ifdef HAVE_REGEX
+	if (srv->regex)
+		forward->forwardall = 0; // make it send only once
+#endif
+
       if ((fd = allocate_rfd(&forward->rfds, srv)) != -1)
 	{
 	  
@@ -667,6 +687,12 @@ static struct ipsets *domain_find_sets(struct ipsets *setlist, const char *domai
   unsigned int matchlen = 0;
   for (ipset_pos = setlist; ipset_pos; ipset_pos = ipset_pos->next) 
     {
+#if defined(HAVE_REGEX) && defined(HAVE_REGEX_IPSET)
+	if (ipset_pos->regex){
+		if (match_regex(ipset_pos->regex, ipset_pos->pextra, daemon->namebuff, namelen))
+			 ret = ipset_pos;
+	}else{
+#endif
       unsigned int domainlen = strlen(ipset_pos->domain);
       const char *matchstart = domain + namelen - domainlen;
       if (namelen >= domainlen && hostname_isequal(matchstart, ipset_pos->domain) &&
@@ -676,6 +702,9 @@ static struct ipsets *domain_find_sets(struct ipsets *setlist, const char *domai
           matchlen = domainlen;
           ret = ipset_pos;
         }
+#if defined(HAVE_REGEX) && defined(HAVE_REGEX_IPSET)
+	}
+#endif
     }
 
   return ret;
@@ -2302,9 +2331,17 @@ unsigned char *tcp_request(int confd, time_t now,
 	      struct server *master;
 	      int start;
 
-	      if (lookup_domain(daemon->namebuff, gotname, &first, &last))
+	      if (lookup_domain(daemon->namebuff, gotname, &first, &last)){
 		flags = is_local_answer(now, first, daemon->namebuff);
+#ifdef HAVE_REGEX
+		if(!flags)
+			flags = is_local_regex_answer(NULL, &first, &last);
+#endif
+		  }
 	      else
+#ifdef HAVE_REGEX
+		if(!(flags = is_local_regex_answer(daemon->namebuff, &first, &last)))
+#endif
 		{
 		  /* No configured servers */
 		  ede = EDE_NOT_READY;
@@ -2323,7 +2360,11 @@ unsigned char *tcp_request(int confd, time_t now,
 		{
 		  master = daemon->serverarray[first];
 		  
+#ifdef HAVE_REGEX
+		  if (option_bool(OPT_ORDER) || master->regex || master->last_server == -1)
+#else
 		  if (option_bool(OPT_ORDER) || master->last_server == -1)
+#endif
 		    start = first;
 		  else
 		    start = master->last_server;

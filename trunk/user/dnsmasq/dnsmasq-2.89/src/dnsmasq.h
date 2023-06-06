@@ -155,6 +155,10 @@ extern int capget(cap_user_header_t header, cap_user_data_t data);
 #include <priv.h>
 #endif
 
+#ifdef HAVE_REGEX
+#include <pcre.h>
+#endif
+
 /* Backwards compat with 2.83 */
 #if defined(HAVE_NETTLEHASH)
 #  define HAVE_CRYPTOHASH
@@ -579,6 +583,10 @@ struct randfd_list {
 struct server {
   u16 flags, domain_len;
   char *domain;
+#ifdef HAVE_REGEX
+  pcre *regex;
+  pcre_extra *pextra;
+#endif
   struct server *next;
   int serial, arrayposn;
   int last_server;
@@ -601,6 +609,10 @@ struct server {
 struct serv_addr4 {
   u16 flags, domain_len;
   char *domain;
+#ifdef HAVE_REGEX
+  pcre *regex;
+  pcre_extra *pextra;
+#endif
   struct server *next;
   struct in_addr addr;
 };
@@ -608,6 +620,10 @@ struct serv_addr4 {
 struct serv_addr6 {
   u16 flags, domain_len;
   char *domain;
+#ifdef HAVE_REGEX
+  pcre *regex;
+  pcre_extra *pextra;
+#endif
   struct server *next;
   struct in6_addr addr;
 };
@@ -615,6 +631,10 @@ struct serv_addr6 {
 struct serv_local {
   u16 flags, domain_len;
   char *domain;
+#ifdef HAVE_REGEX
+  pcre *regex;
+  pcre_extra *pextra;
+#endif
   struct server *next;
 };
 
@@ -627,6 +647,10 @@ struct ipsets {
   char **sets;
   char *domain;
   struct ipsets *next;
+#if defined(HAVE_REGEX) && defined(HAVE_REGEX_IPSET)
+  pcre *regex;
+  pcre_extra *pextra;
+#endif
 };
 
 struct allowlist {
@@ -1147,6 +1171,9 @@ extern struct daemon {
   struct rebind_domain *no_rebind;
   int server_has_wildcard;
   int serverarraysz, serverarrayhwm;
+#ifdef HAVE_REGEX
+  int regexserverarraysz, regexlocaldomainarraysz;
+#endif
   struct ipsets *ipsets, *nftsets;
   u32 allowlist_mask;
   struct allowlist *allowlists;
@@ -1840,6 +1867,12 @@ void dump_packet_icmp(int mask, void *packet, size_t len, union mysockaddr *src,
 #endif
 
 /* domain-match.c */
+#ifdef HAVE_REGEX
+int is_local_regex_answer(const char *domain, int *first, int *last);
+int find_regex_server(const char* domain, int is_local, int *arraypos);
+int match_regex(const pcre *regex, const pcre_extra *pextra, const char *str, size_t len);
+const char *parse_regex_option(const char *arg, pcre **regex, pcre_extra **pextra);
+#endif
 void build_server_array(void);
 int lookup_domain(char *qdomain, int flags, int *lowout, int *highout);
 int filter_servers(int seed, int flags, int *lowout, int *highout);
