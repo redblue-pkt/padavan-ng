@@ -711,6 +711,8 @@ ej_dump(int eid, webs_t wp, int argc, char **argv)
 		snprintf(filename, sizeof(filename), "%s/%s", STORAGE_OVPNCLI_DIR, file+8);
 	else if (strncmp(file, "dnsmasq.", 8)==0)
 		snprintf(filename, sizeof(filename), "%s/%s", STORAGE_DNSMASQ_DIR, file+8);
+	else if (strncmp(file, "dhcphrc.", 8)==0)
+		snprintf(filename, sizeof(filename), "%s/%s", STORAGE_DHCPHRC_DIR, file+8);
 	else if (strncmp(file, "scripts.", 8)==0)
 		snprintf(filename, sizeof(filename), "%s/%s", STORAGE_SCRIPTS_DIR, file+8);
 	else if (strncmp(file, "crontab.", 8)==0)
@@ -897,6 +899,9 @@ validate_asp_apply(webs_t wp, int sid)
 
 			if (!strncmp(v->name, "dnsmasq.", 8)) {
 				if (write_textarea_to_file(value, STORAGE_DNSMASQ_DIR, file_name))
+					restart_needed_bits |= event_mask;
+			} else if (!strncmp(v->name, "dhcphrc.", 8)) {
+				if (write_textarea_to_file(value, STORAGE_DHCPHRC_DIR, file_name))
 					restart_needed_bits |= event_mask;
 			} else if (!strncmp(v->name, "scripts.", 8)) {
 				if (write_textarea_to_file(value, STORAGE_SCRIPTS_DIR, file_name))

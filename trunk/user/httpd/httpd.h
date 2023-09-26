@@ -36,6 +36,7 @@
 #define STORAGE_TORCONF_DIR	"/etc/storage/tor"
 #define STORAGE_PRIVOXY_DIR	"/etc/storage/privoxy"
 #define STORAGE_STUBBY_DIR	"/etc/storage/stubby"
+#define STORAGE_DHCPHRC_DIR	"/etc/dnsmasq/dhcp"
 
 #define PROFILE_FIFO_UPLOAD	"/tmp/settings_u.prf"
 #define PROFILE_FIFO_DOWNLOAD	"/tmp/settings_d.prf"

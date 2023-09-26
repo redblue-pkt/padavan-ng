@@ -506,6 +506,7 @@
 			{"dnsmasq.dnsmasq.conf", "File", NULL, EVM_RESTART_DHCPD},
 			{"dnsmasq.dnsmasq.servers", "File", NULL, EVM_RESTART_DHCPD},
 			{"dnsmasq.dhcp.conf", "File", NULL, EVM_RESTART_DHCPD},
+			{"dhcphrc.dhcp-hosts.rc", "File", NULL, FALSE},
 			{"http_access", "", NULL, EVM_RESTART_HTTPD},
 			{"http_proto", "", NULL, EVM_RESTART_HTTPD},
 			{"http_lanport", "", NULL, EVM_RESTART_HTTPD},

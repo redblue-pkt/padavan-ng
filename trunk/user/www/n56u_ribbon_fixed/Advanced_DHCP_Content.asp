@@ -257,9 +257,11 @@ function pullLANIPList(obj){
 function change_dhcp_static_enabled(){
 	var v = document.form.dhcp_static_x[0].checked;
 	showhide_div('row_static_arp', v);
+	showhide_div('row_hostsrc', v);
 	showhide_div('row_static_caption', v);
 	showhide_div('row_static_header', v);
 	showhide_div('row_static_body', v);
+	inputCtrl(document.form['dhcphrc.dhcp-hosts.rc'], v);
 }
 
 function done_validating(action){
@@ -604,6 +606,14 @@ function changeBgColor(obj, num){
                                                 <div style="position: absolute; margin-left: -10000px;">
                                                     <input type="radio" value="1" name="dhcp_static_arp" id="dhcp_static_arp_1" onclick="change_dhcp_static_enabled()" <% nvram_match_x("", "dhcp_static_arp", "1", "checked"); %> /><#checkbox_Yes#>
                                                     <input type="radio" value="0" name="dhcp_static_arp" id="dhcp_static_arp_0" onclick="change_dhcp_static_enabled()" <% nvram_match_x("", "dhcp_static_arp", "0", "checked"); %> /><#checkbox_No#>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr id="row_hostsrc" style="display:none">
+                                            <td colspan="2">
+                                                <a href="javascript:spoiler_toggle('spoiler_hostsrc')"><span><#CustomConf#> "dhcp-hosts.rc"</span></a>
+                                                <div id="spoiler_hostsrc" style="display:none;">
+                                                    <textarea rows="16" wrap="off" spellcheck="false" maxlength="16384" class="span12" name="dhcphrc.dhcp-hosts.rc" style="font-family:'Courier New'; font-size:12px;"><% nvram_dump("dhcphrc.dhcp-hosts.rc",""); %></textarea>
                                                 </div>
                                             </td>
                                         </tr>
