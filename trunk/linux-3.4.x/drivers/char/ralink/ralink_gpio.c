@@ -1551,6 +1551,8 @@ int __init ralink_gpio_init(void)
 #endif
 #if defined(CONFIG_RALINK_GPIOMODE_EPHY) && defined(RALINK_GPIOMODE_EPHY)
 	gpiomode |= RALINK_GPIOMODE_EPHY;
+#else
+	gpiomode &= ~(RALINK_GPIOMODE_EPHY);
 #endif
 #if defined(CONFIG_RALINK_GPIOMODE_MDIO) && defined(RALINK_GPIOMODE_MDIO)
 	gpiomode |= RALINK_GPIOMODE_MDIO;
