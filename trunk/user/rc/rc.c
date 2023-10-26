@@ -1182,6 +1182,12 @@ handle_notifications(void)
 			restart_ftpd();
 		}
 #endif
+#if defined(APP_TTYD)
+		else if (strcmp(entry->d_name, RCN_RESTART_TTYD) == 0)
+		{
+			restart_ttyd();
+		}
+#endif
 #if defined(APP_SMBD)
 		else if (strcmp(entry->d_name, RCN_RESTART_SMBD) == 0)
 		{

@@ -24,6 +24,14 @@ STORAGE_ENABLED=n
 OPENSSH_ENABLED=n
 DROPBEAR_ENABLED=n
 SAMBA_ENABLED=n
+HTOP_ENABLED=n
+MC_ENABLED=n
+TTYD_ENABLED=n
+WGET_ENABLED=n
+USBUTILS_ENABLED=n
+WWW_SKINS_LITE=n
+WWW_SKINS=n
+
 ifneq ($(CONFIG_FIRMWARE_INCLUDE_OPENSSH),y)
 ifeq ($(CONFIG_FIRMWARE_INCLUDE_DROPBEAR),y)
 DROPBEAR_ENABLED=y
@@ -33,6 +41,26 @@ endif
 endif
 else
 OPENSSH_ENABLED=y
+endif
+
+ifeq ($(CONFIG_FIRMWARE_INCLUDE_USBUTILS),y)
+USBUTILS_ENABLED=y
+endif
+
+ifeq ($(CONFIG_FIRMWARE_INCLUDE_HTOP),y)
+HTOP_ENABLED=y
+endif
+
+ifeq ($(CONFIG_FIRMWARE_INCLUDE_WGET),y)
+WGET_ENABLED=y
+endif
+
+ifeq ($(CONFIG_FIRMWARE_INCLUDE_MC),y)
+MC_ENABLED=y
+endif
+
+ifeq ($(CONFIG_FIRMWARE_INCLUDE_TTYD),y)
+TTYD_ENABLED=y
 endif
 
 ifeq ($(CONFIG_FIRMWARE_INCLUDE_WINS),y)
@@ -73,6 +101,14 @@ SAMBA_ENABLED=y
 endif
 endif
 
+ifeq ($(CONFIG_FIRMWARE_INCLUDE_WWW_SKINS),y)
+WWW_SKINS=y
+endif
+
+ifeq ($(CONFIG_FIRMWARE_INCLUDE_WWW_SKINS_LITE),y)
+WWW_SKINS_LITE=y
+endif
+
 dir_y =
 dir_n =
 dir_  =
@@ -90,8 +126,10 @@ dir_$(STORAGE_ENABLED)				+= libdisk
 dir_y						+= nvram
 dir_y						+= mtd_write
 dir_y						+= networkmap
+dir_$(HTOP_ENABLED)					+= htop
 dir_y						+= httpd
 dir_y						+= www
+dir_$(CONFIG_FIRMWARE_INCLUDE_NANO)		+= nano
 dir_y						+= rc
 dir_y						+= infosvr
 dir_y						+= inadyn
@@ -120,6 +158,10 @@ dir_$(CONFIG_FIRMWARE_INCLUDE_ADB)		+= adb
 dir_$(CONFIG_FIRMWARE_INCLUDE_MINISATIP)	+= minisatip
 dir_$(CONFIG_FIRMWARE_INCLUDE_VLMCSD)		+= vlmcsd
 dir_$(CONFIG_FIRMWARE_INCLUDE_IPERF3)		+= iperf3
+dir_$(TTYD_ENABLED)				+= ttyd
+dir_$(WGET_ENABLED)				+= wget
+dir_$(CONFIG_FIRMWARE_INCLUDE_USBUTILS)		+= usbutils
+
 
 ifeq ($(SAMBA_ENABLED),y)
 ifeq ($(CONFIG_FIRMWARE_INCLUDE_SMBD36),y)
@@ -137,7 +179,7 @@ dir_$(CONFIG_FIRMWARE_INCLUDE_STUBBY)		+= stubby
 dir_$(CONFIG_FIRMWARE_INCLUDE_DOH)		+= doh_proxy
 ifneq (,$(filter y,$(CONFIG_FIRMWARE_INCLUDE_XUPNPD) $(CONFIG_FIRMWARE_INCLUDE_LUA)))
 dir_y						+= lua
-dir_$(CONFIG_FIRMWARE_INCLUDE_XUPNPD)           += xupnpd
+dir_$(CONFIG_FIRMWARE_INCLUDE_XUPNPD)		+= xupnpd
 endif
 
 ifdef CONFIG_BLK_DEV_SD
@@ -176,13 +218,19 @@ dir_$(CONFIG_FIRMWARE_INCLUDE_TRANSMISSION)	+= transmission
 dir_$(CONFIG_FIRMWARE_INCLUDE_ARIA)		+= aria2
 endif
 
+dir_$(CONFIG_FIRMWARE_INCLUDE_MC)		+= mc
+
 ifdef CONFIG_MTD_UBI
 ifneq ($(STORAGE_ENABLED),y)
 dir_y						+= util-linux
+endif
+endif
+
 dir_y						+= optware
-endif
 dir_y						+= mtd-utils
-endif
+
+dir_$(CONFIG_FIRMWARE_INCLUDE_WWW_SKINS)	+= www-skins
+dir_$(CONFIG_FIRMWARE_INCLUDE_WWW_SKINS_LITE)	+= www-skins-lite
 
 all:
 	for i in $(dir_y) ; do \

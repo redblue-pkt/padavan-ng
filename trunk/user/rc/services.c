@@ -332,7 +332,7 @@ is_doh_run(void)
 void
 stop_doh(void)
 {
-	eval("/usr/bin/doh_proxy.sh", "stop");
+	eval("/usr/sbin/doh_start.sh", "stop");
 }
 
 void
@@ -341,7 +341,7 @@ start_doh(void)
 	int doh_mode = nvram_get_int("doh_enable");
 
 	if (doh_mode == 1)
-		eval("/usr/bin/doh_proxy.sh", "start");
+		eval("/usr/sbin/doh_start.sh", "start");
 }
 void
 restart_doh(void)
@@ -365,7 +365,7 @@ is_stubby_run(void)
 void
 stop_stubby(void)
 {
-	eval("/usr/bin/stubby_proxy.sh", "stop");
+	eval("/usr/sbin/stubby_proxy.sh", "stop");
 }
 
 void
@@ -374,7 +374,7 @@ start_stubby(void)
 	int stubby_mode = nvram_get_int("stubby_enable");
 
 	if (stubby_mode == 1)
-		eval("/usr/bin/stubby_proxy.sh", "start");
+		eval("/usr/sbin/stubby_proxy.sh", "start");
 }
 void
 restart_stubby(void)
@@ -492,6 +492,23 @@ void start_iperf3(void){
 void restart_iperf3(void){
 	stop_iperf3();
 	start_iperf3();
+}
+#endif
+
+#if defined(APP_TTYD)
+void stop_ttyd(void){
+	eval("/usr/bin/ttyd.sh","stop");
+}
+
+void start_ttyd(void){
+	int ttyd_mode = nvram_get_int("ttyd_enable");
+	if ( ttyd_mode == 1)
+		eval("/usr/bin/ttyd.sh","start");
+}
+
+void restart_ttyd(void){
+	stop_ttyd();
+	start_ttyd();
 }
 #endif
 
@@ -721,6 +738,9 @@ start_services_once(int is_ap_mode)
 	start_iperf3();
 #endif
 	start_lltd();
+#if defined(APP_TTYD)
+	start_ttyd();
+#endif
 	start_watchdog_cpu();
 	start_crond();
 	start_networkmap(1);
@@ -771,6 +791,9 @@ stop_services(int stopall)
 #endif
 #if defined(APP_IPERF3)
 	stop_iperf3();
+#endif
+#if defined(APP_TTYD)
+	stop_ttyd();
 #endif
 	stop_networkmap();
 	stop_lltd();

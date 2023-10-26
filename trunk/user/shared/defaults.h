@@ -23,7 +23,7 @@
 #define SYS_EXEC_PATH_OPT	"/opt/sbin:/opt/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 #define SYS_HOME_PATH_ROOT	"/home/admin"
 
-#define SYS_USER_ROOT		"admin"
+#define SYS_USER_ROOT		"root"
 #define SYS_GROUP_ROOT		"root"
 #define SYS_USER_NOBODY		"nobody"
 #define SYS_GROUP_NOGROUP	"nogroup"
@@ -33,20 +33,20 @@
 #define DEF_LAN_DHCP_END	"192.168.1.244"
 #define DEF_LAN_MASK		"255.255.255.0"
 
-#define DEF_WLAN_2G_CC		"UA"
-#define DEF_WLAN_5G_CC		"UA"
+#define DEF_WLAN_2G_CC		"GB"
+#define DEF_WLAN_5G_CC		"GB"
 #define DEF_WLAN_2G_SSID	"Padavan_2.4GHz"
 #define DEF_WLAN_5G_SSID	"Padavan_5GHz"
 #define DEF_WLAN_2G_GSSID	"Padavan_GUEST_2.4GHz"
 #define DEF_WLAN_5G_GSSID	"Padavan_GUEST_5GHz"
-#define DEF_WLAN_2G_PSK		"1234567890"
-#define DEF_WLAN_5G_PSK		"1234567890"
+#define DEF_WLAN_2G_PSK		"lu25t832lu25t832"
+#define DEF_WLAN_5G_PSK		"lu25t832lu25t832"
 
-#define DEF_ROOT_PASSWORD	"admin"
+#define DEF_ROOT_PASSWORD	"lu25t832"
 #define DEF_SMB_WORKGROUP	"WORKGROUP"
-#define DEF_TIMEZONE		"EET-2EETDST"
-#define DEF_NTP_SERVER0		"pool.ntp.org"
-#define DEF_NTP_SERVER1		"time.in.ua"
+#define DEF_TIMEZONE		"MET-1METDST"
+#define DEF_NTP_SERVER0		"no.pool.ntp.org"
+#define DEF_NTP_SERVER1		"pl.pool.ntp.org"
 #ifdef SUPPORT_OPENSSL_EC
 #define DEF_HTTPS_CIPH_LIST	"ECDH+CHACHA20:ECDH+AESGCM:DH+AESGCM:DH+AES256:DH+AES:DH+3DES:RSA+AES:RSA+3DES:!ADH:!MD5:!DSS"
 #else

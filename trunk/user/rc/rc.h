@@ -516,6 +516,12 @@ void stop_services(int stopall);
 void stop_services_lan_wan(void);
 void stop_misc(void);
 
+
+#if defined(APP_TTYD)
+void stop_ttyd(void);
+void start_ttyd(void);
+void restart_ttyd(void);
+#endif
 #if defined(SUPPORT_ZRAM)
 int get_zram_disksize(void);
 void stop_zram(void);

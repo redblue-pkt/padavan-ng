@@ -1,8 +1,8 @@
 ##################################################################
 # Board PID # Board Name       # PRODUCT # Note
 ##################################################################
-# MI-R3PRO # Xiaomi R3PRO   # MT7621  #
+# RT-AC51U  # ASUS RT-AC51U    # MT7620  #
 ##################################################################
 
-CFLAGS += -DBOARD_MIR3PRO
+CFLAGS += -DBOARD_AC51U -DVENDOR_ASUS
 BOARD_NUM_USB_PORTS=1

@@ -494,7 +494,11 @@ struct nvram_pair router_defaults[] = {
 	/*autoreboot*/
 	{ "reboot_schedule_enable", "0" },
 	{ "reboot_schedule", "00000000000" },
-	
+
+	/* ttyd related */
+	{ "ttyd_enable", "0" },
+	{ "ttyd_port", "7681" },
+
 	/* DHCP server parameters */
 	{ "dhcp_start", DEF_LAN_DHCP_BEG },	/* First assignable DHCP address */
 	{ "dhcp_end", DEF_LAN_DHCP_END },	/* Last assignable DHCP address */
@@ -680,14 +684,14 @@ struct nvram_pair router_defaults[] = {
 #endif
 	{ "watchdog_cpu", "0" },
 	{ "front_led_all", "1" },
-	{ "front_led_wan", "2" },
+	{ "front_led_wan", "1" },
 #if defined (BOARD_GPIO_LED_WAN) && defined (BOARD_GPIO_LED_WAN_PHY)
 	{ "front_led_lan", "2" },
 #else
-	{ "front_led_lan", "1" },
+	{ "front_led_lan", "2" },
 #endif
 	{ "front_led_wif", "1" },
-	{ "front_led_usb", "1" },
+	{ "front_led_usb", "2" },
 	{ "front_led_pwr", "1" },
 
 	{ "ether_igmp", "1" },
