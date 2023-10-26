@@ -32,6 +32,11 @@ LIBS_INCLUDE_LIBUSB_1=n
 LIBS_INCLUDE_LIBEVENT=n
 LIBS_INCLUDE_MEDIA=n
 LIBS_INCLUDE_LIBCURL=n
+LIBS_INCLUDE_LIBFFI=n
+LIBS_INCLUDE_LIBUV=n
+LIBS_INCLUDE_LIBGLIB2=n
+LIBS_INCLUDE_LIBWEBSOCKETS=n
+LIBS_INCLUDE_LIBJSON_C=n
 STORAGE_ENABLED=n
 
 ifdef CONFIG_MMC_BLOCK
@@ -66,6 +71,33 @@ LIBS_INCLUDE_MEDIA=y
 endif
 endif
 
+ifeq ($(CONFIG_FIRMWARE_INCLUDE_NANO),y)
+LIBS_INCLUDE_NCURSES=y
+endif
+
+ifeq ($(CONFIG_FIRMWARE_INCLUDE_TTYD),y)
+LIBS_INCLUDE_LIBJSON_C=y
+LIBS_INCLUDE_LIBWEBSOCKETS=y
+endif
+
+ifeq ($(LIBS_INCLUDE_LIBWEBSOCKETS),y)
+LIBS_INCLUDE_LIBUV=y
+endif
+
+ifeq ($(CONFIG_FIRMWARE_INCLUDE_HTOP),y)
+LIBS_INCLUDE_NCURSES=y
+endif
+
+ifeq ($(CONFIG_FIRMWARE_INCLUDE_MC),y)
+LIBS_INCLUDE_NCURSES=y
+LIBS_INCLUDE_LIBFFI=y
+LIBS_INCLUDE_LIBGLIB2=y
+endif
+
+ifeq ($(CONFIG_INCLUDE_LIBGLIB2),y)
+LIBS_INCLUDE_LIBFFI=y
+endif
+
 ifdef CONFIG_USB_SUPPORT
 LIBS_INCLUDE_LIBUSB_1=y
 ifeq ($(CONFIG_FIRMWARE_INCLUDE_U2EC),y)
@@ -89,11 +121,21 @@ ifneq (,$(filter y,$(CONFIG_FIRMWARE_INCLUDE_PRIVOXY) $(CONFIG_FIRMWARE_ENABLE_D
 LIBS_INCLUDE_LIBPCRE=y
 endif
 
+ifeq ($(CONFIG_FIRMWARE_INCLUDE_CURL),y)
+LIBS_INCLUDE_LIBCURL=y
+endif
+ifeq ($(CONFIG_FIRMWARE_INCLUDE_WGET),y)
+LIBS_INCLUDE_LIBSSL=y
+endif
+ifeq ($(CONFIG_FIRMWARE_INCLUDE_USBUTILS),y)
+LIBS_INCLUDE_LIBUSB_1=y
+endif
+
 dir_y						+= libz
 dir_$(LIBS_INCLUDE_LIBLZO)			+= liblzo
-dir_y						+= libssl3.1
+#dir_y						+= libssl3.1
 #dir_y						+= libssl3
-#dir_y						+= libssl1
+dir_y						+= libssl1
 dir_$(LIBS_INCLUDE_LIBUSB_0)			+= libusb
 dir_$(LIBS_INCLUDE_LIBUSB_1)			+= libusb-1.0
 dir_y						+= libnfnetlink
@@ -114,6 +156,9 @@ dir_$(CONFIG_FIRMWARE_INCLUDE_MINIDLNA)		+= libogg
 dir_$(CONFIG_FIRMWARE_INCLUDE_MINIDLNA)		+= libvorbis
 dir_$(LIBS_INCLUDE_MEDIA)			+= libflac
 dir_$(LIBS_INCLUDE_MEDIA)			+= libsqlite
+
+dir_$(LIBS_INCLUDE_LIBUV)			+= libuv
+dir_$(LIBS_INCLUDE_LIBWEBSOCKETS)		+= libwebsockets
 
 # stubby extra libs
 dir_$(LIBS_INCLUDE_LIBYAML)			+= libyaml
@@ -144,6 +189,10 @@ dir_y						+= libtirpc
 endif
 
 dir_$(LIBS_INCLUDE_LIBEVENT)			+= libevent
+dir_$(LIBS_INCLUDE_LIBFFI)			+= libffi
+dir_$(LIBS_INCLUDE_LIBGLIB2)			+= libglib2
+dir_$(LIBS_INCLUDE_NCURSES)			+= libncurses
+dir_$(LIBS_INCLUDE_LIBJSON_C)			+= libjson-c
 
 all:
 	for i in $(dir_y) ; do \
